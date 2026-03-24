@@ -24,7 +24,7 @@
       overflow-x: hidden;
     }
 
-    /* ===== HERO SECTION - PINK → PURPLE → ORANGE GRADIENT ===== */
+    /* ===== HERO SECTION - VIBRANT GRADIENT ===== */
     .hero-gradient {
       background: linear-gradient(135deg, #ff4d6d 0%, #7b2cbf 50%, #ff8c42 100%);
       border-radius: 0 0 48px 48px;
@@ -129,15 +129,15 @@
       position: fixed;
       top: 0;
       right: -100%;
-      width: 80%;
-      max-width: 320px;
+      width: 85%;
+      max-width: 350px;
       height: 100vh;
       background: linear-gradient(145deg, #2c2418, #1e1913);
       backdrop-filter: blur(20px);
       z-index: 200;
       transition: 0.4s ease-in-out;
       padding: 100px 2rem 2rem;
-      box-shadow: -5px 0 30px rgba(0,0,0,0.3);
+      box-shadow: -5px 0 30px rgba(0,0,0,0.4);
     }
 
     .mobile-menu.active {
@@ -148,7 +148,7 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 1.8rem;
+      gap: 1.5rem;
     }
 
     .mobile-menu a {
@@ -156,10 +156,18 @@
       color: white;
       font-size: 1.3rem;
       font-weight: 600;
-      display: block;
-      padding: 0.5rem 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0.8rem 0;
       transition: 0.2s;
       border-bottom: 2px solid rgba(255,140,66,0.3);
+    }
+
+    .mobile-menu a i {
+      width: 28px;
+      font-size: 1.3rem;
+      color: #ff8c42;
     }
 
     .mobile-menu a:hover {
@@ -174,6 +182,19 @@
       font-size: 2rem;
       color: white;
       cursor: pointer;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      transition: 0.3s;
+    }
+
+    .mobile-close:hover {
+      background: rgba(255,140,66,0.3);
+      transform: rotate(90deg);
     }
 
     /* Overlay background */
@@ -183,7 +204,8 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.5);
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(4px);
       z-index: 150;
       display: none;
     }
@@ -608,11 +630,11 @@
       
       <!-- Desktop Navigation -->
       <ul class="nav-links">
-        <li><a href="#">Home</a></li>
-        <li><a href="#eventsSection">Events</a></li>
-        <li><a href="#prayers-faith">Prayers&Faith</a></li>
-        <li><a href="#pastEventsGallerySec">Past Events</a></li>
-        <li><a href="#" id="navJoinBtnDesktop">Join Us</a></li>
+        <li><a href="#">🏠 Home</a></li>
+        <li><a href="#eventsSection">📅 Events</a></li>
+        <li><a href="#prayers-faith">🙏 Prayers&Faith</a></li>
+        <li><a href="#pastEventsGallerySec">🎉 Past Events</a></li>
+        <li><a href="#" id="navJoinBtnDesktop">🤝 Join Us</a></li>
       </ul>
       
       <!-- Hamburger Button -->
@@ -632,15 +654,17 @@
   </div>
 </div>
 
-<!-- Mobile Menu -->
+<!-- Mobile Menu with All Navigation Items -->
 <div class="mobile-menu" id="mobileMenu">
-  <div class="mobile-close" id="closeMenuBtn">&times;</div>
+  <div class="mobile-close" id="closeMenuBtn">
+    <i class="fas fa-times"></i>
+  </div>
   <ul>
-    <li><a href="#" id="mobileHome">🏠 Home</a></li>
-    <li><a href="#" id="mobileEvents">📅 Events</a></li>
-    <li><a href="#" id="mobilePrayers">🙏 Prayers&Faith</a></li>
-    <li><a href="#" id="mobilePastEvents">🎉 Past Events</a></li>
-    <li><a href="#" id="mobileJoinUs">🤝 Join Us</a></li>
+    <li><a href="#" id="mobileHome"><i class="fas fa-home"></i> Home</a></li>
+    <li><a href="#" id="mobileEvents"><i class="fas fa-calendar-alt"></i> Events</a></li>
+    <li><a href="#" id="mobilePrayers"><i class="fas fa-pray"></i> Prayers & Faith</a></li>
+    <li><a href="#" id="mobilePastEvents"><i class="fas fa-history"></i> Past Events</a></li>
+    <li><a href="#" id="mobileJoinUs"><i class="fas fa-user-plus"></i> Join Us</a></li>
   </ul>
 </div>
 <div class="menu-overlay" id="menuOverlay"></div>
@@ -763,20 +787,29 @@
   closeMenuBtn.addEventListener('click', closeMenu);
   menuOverlay.addEventListener('click', closeMenu);
 
-  // Close menu when clicking mobile links
-  const mobileLinks = ['mobileHome', 'mobileEvents', 'mobilePrayers', 'mobilePastEvents', 'mobileJoinUs'];
-  mobileLinks.forEach(id => {
-    const link = document.getElementById(id);
-    if (link) {
-      link.addEventListener('click', (e) => {
+  // Close menu when clicking mobile links and scroll to sections
+  const mobileLinks = [
+    { id: 'mobileHome', section: null, action: 'home' },
+    { id: 'mobileEvents', section: 'eventsSection', action: 'scroll' },
+    { id: 'mobilePrayers', section: 'prayers-faith', action: 'scroll' },
+    { id: 'mobilePastEvents', section: 'pastEventsGallerySec', action: 'scroll' },
+    { id: 'mobileJoinUs', section: null, action: 'join' }
+  ];
+
+  mobileLinks.forEach(link => {
+    const element = document.getElementById(link.id);
+    if (element) {
+      element.addEventListener('click', (e) => {
         e.preventDefault();
         closeMenu();
-        // Scroll to sections
-        if (id === 'mobileHome') window.scrollTo({ top: 0, behavior: 'smooth' });
-        if (id === 'mobileEvents') document.getElementById('eventsSection')?.scrollIntoView({ behavior: 'smooth' });
-        if (id === 'mobilePrayers') document.getElementById('prayers-faith')?.scrollIntoView({ behavior: 'smooth' });
-        if (id === 'mobilePastEvents') document.getElementById('pastEventsGallerySec')?.scrollIntoView({ behavior: 'smooth' });
-        if (id === 'mobileJoinUs') openJoinModal();
+        if (link.action === 'home') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        } else if (link.action === 'scroll' && link.section) {
+          const section = document.getElementById(link.section);
+          if (section) section.scrollIntoView({ behavior: 'smooth' });
+        } else if (link.action === 'join') {
+          openJoinModal();
+        }
       });
     }
   });
